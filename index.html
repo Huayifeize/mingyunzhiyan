@@ -42,17 +42,76 @@
         
         /* 搜索框高亮动画 */
         .highlight-row { background: rgba(37,99,235,0.05); }
+
+        /* 产品卡片特有样式 */
+.product-card {
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.product-img-wrapper {
+    background: #f8fafc;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.view-detail:hover {
+    text-decoration: underline;
+}
+
+/* 模态框背景遮罩 */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6); 
+    backdrop-filter: blur(4px);
+    display: none; /* 默认隐藏 */
+    align-items: center; justify-content: center;
+    z-index: 1000;
+}
+.modal-overlay.active { display: flex; } /* 激活时显示 */
+
+.modal-card {
+    background: var(--bg-card);
+    width: 90%; max-width: 500px;
+    border-radius: 24px; padding: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+}
+.modal-overlay.active .modal-card { transform: translateY(0); }
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.close-btn { font-size: 28px; cursor: pointer; color: var(--text-muted); }
+.close-btn:hover { color: var(--accent-red); }
+
+.detail-table { width: 100%; border-collapse: collapse; }
+.detail-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.detail-table td:first-child { color: var(--text-muted); font-weight: 500; }
+.detail-table td:last-child { text-align: right; font-weight: 600; }
+
     </style>
 </head>
 
 <body data-theme="light">
 
     <aside>
-        <div style="font-size: 24px; font-weight: 800; margin-bottom: 40px; color: var(--primary);">稳链宝 <span style="font-size: 12px; opacity: 0.5;">v2.1</span></div>
+
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 40px;">
+    
+    <div style="font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: 1px;">命运之眼</div>
+    <img src="命运之眼.jpg" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; box-shadow: 0 0 10px rgba(37,99,235,0.5);">
+</div>
         <nav id="sidebar-nav">
-           <div class="nav-link" > <span>📜 洞析智瞳</span> </div>
+           <div class="nav-link active" > <span>📜 使用说明</span> </div>
             <div class="nav-link" onclick="navTo('products', this)"><span>📦 产品展示</span></div>
-              <div class="nav-link active" onclick="navTo('home', this)"><span>📊 期货预测</span></div>
+              <div class="nav-link" onclick="window.location.href='榜.html'"><span>📊 期货预测</span></div>
+              
              <div class="nav-link" onclick="window.location.href='测算模型.html'"> <span>📜 客户窗口</span> </div>
              <div class="nav-link" onclick="window.location.href='enterprise.html'"> <span>📜 企业窗口</span> </div>
             <div class="nav-link" onclick="navTo('calc', this)"><span>📄 电子合同</span></div>
@@ -66,7 +125,7 @@
     </aside>
 
     <header>
-        <div style="font-weight: 600;">当前页面：<span id="curPage" style="color: var(--primary);">数据看板</span></div>
+        <div style="font-weight: 600;">当前页面：<span id="curPage" style="color: var(--primary);">使用说明</span></div>
         <div style="display:flex; align-items:center; gap:20px;">
             <input id="topSearch" type="text" placeholder="输入单号或关键字搜寻历史..." 
                    style="padding:10px 16px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); width: 280px;" 
@@ -77,41 +136,34 @@
 
     <main>
         <section id="home" class="page active">
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
-                <div class="card">
-                    <div style="font-size:13px; color:var(--text-muted);">PP 现货动态 (实时)</div>
-                    <div style="font-size:32px; font-weight:800; margin:12px 0;" id="live-price">¥ 8,420.00</div>
-                    <div style="color:var(--accent-green); font-weight:600;" id="live-diff">等待演化...</div>
-                </div>
-                <div class="card">
-                    <div style="font-size:13px; color:var(--text-muted);">实时风险偏好 (λ)</div>
-                    <div style="font-size:32px; font-weight:800; margin:12px 0; color:var(--accent-red);" id="live-lambda">0.50</div>
-                </div>
-                <div class="card">
-                    <div style="font-size:13px; color:var(--text-muted);">基差收敛概率</div>
-                    <div style="font-size:32px; font-weight:800; margin:12px 0;">88.4%</div>
-                </div>
-            </div>
-            <div class="card">
-                <h3 style="margin-top:0;">聚烯烃价格随机演化曲线</h3>
-                <div style="height: 350px;"><canvas id="proChart"></canvas></div>
-            </div>
-        </section>
+    <div class="divine-overlay">
+        
+    </div>
+</section>
 
         <section id="products" class="page">
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
-                <div class="card" style="cursor:pointer;" onclick="openProduct('PP-拉丝级 T30S', 8420)">
-                    <div style="font-size:40px; margin-bottom:15px;">💎</div>
-                    <div style="font-weight:700;">聚丙烯 PP (T30S)</div>
-                    <div style="margin-top:20px; color:var(--primary); font-weight:800;">¥ 8,420 / T</div>
-                </div>
-                <div class="card" style="cursor:pointer;" onclick="openProduct('PE-膜级 LDPE', 9250)">
-                    <div style="font-size:40px; margin-bottom:15px;">📦</div>
-                    <div style="font-weight:700;">聚乙烯 LDPE (2426H)</div>
-                    <div style="margin-top:20px; color:var(--primary); font-weight:800;">¥ 9,250 / T</div>
-                </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+        <div class="card product-card" onclick="openProduct('PP-拉丝级 T30S', 8420)">
+            <div class="product-img-wrapper">
+                <img src="pp_product.png" alt="PP" style="width:100%; height:180px; object-fit:cover; border-radius:12px;">
             </div>
-        </section>
+            <div style="margin-top:16px;">
+                <div style="font-weight:700; font-size:16px;">聚丙烯 PP (T30S)</div>
+                <div class="view-detail" style="color:var(--primary); font-size:13px; margin-top:8px; font-weight:500;">查看详情 →</div>
+            </div>
+        </div>
+
+        <div class="card product-card" onclick="openProduct('PE-膜级 LDPE', 9250)">
+            <div class="product-img-wrapper">
+                <img src="pe_product.png" alt="PE" style="width:100%; height:180px; object-fit:cover; border-radius:12px;">
+            </div>
+            <div style="margin-top:16px;">
+                <div style="font-weight:700; font-size:16px;">聚乙烯 LDPE (2426H)</div>
+                <div class="view-detail" style="color:var(--primary); font-size:13px; margin-top:8px; font-weight:500;">查看详情 →</div>
+            </div>
+        </div>
+    </div>
+</section>
 <!-- 保留一个电子合同按钮 -->
         <section id="calc" class="page">
     <div class="card" style="text-align:center;">
@@ -125,10 +177,47 @@
 </section>
 
 
-        
     </main>
 
     <script>
+        // 小卡片
+        // 产品详细介绍数据
+const productDetails = {
+    'PP-拉丝级 T30S': {
+        title: '聚丙烯 (PP)',
+        content: `广泛应用于包装、纤维、汽车、家电等日用品以及工业品等领域的生产，近几年在医疗领域也有较普遍的应用。<br><br><b>核心类别：</b><br>• 纤维料、注塑料<br>• 薄膜料、管材料、透明料等。`
+    },
+    'PE-膜级 LDPE': {
+        title: '聚乙烯 (PE)',
+        content: `<b>高密度聚乙烯：</b>应用于薄膜料、注塑料、管材料、中空料；<br><br><b>低密度聚乙烯：</b>应用于包装膜，注塑制品、涂覆、电线电缆等领域，涂覆多应用于一次性纸杯、方便面桶等；<br><br><b>线性低密度聚乙烯：</b>以生产农膜、包装膜等薄膜制品为主，另外也可应用在生产注塑、电缆等产品，以及大型水塔、儿童爬梯等滚塑产品。`
+    }
+};
+
+// 修改原有的 openProduct 函数
+function openProduct(name, price) {
+    const modal = document.getElementById('productModal');
+    const title = document.getElementById('modalTitle');
+    const content = document.getElementById('modalContent');
+
+    if (productDetails[name]) {
+        title.innerText = productDetails[name].title;
+        content.innerHTML = productDetails[name].content;
+        modal.classList.add('active');
+    }
+    
+    // 同步更新计算器数据
+    const baseInput = document.getElementById('i_base');
+    if (baseInput) {
+        baseInput.value = price;
+        runCalc();
+    }
+}
+
+// 关闭模态框
+function closeModal() {
+    document.getElementById('productModal').classList.remove('active');
+}
+// 小卡片之上
         const state = {
             history: JSON.parse(localStorage.getItem('wb_data_v6') || '[]'),
             chart: null,
@@ -217,11 +306,29 @@
             renderHistory();
         }
 
-        function openProduct(name, price) {
-            document.getElementById('i_base').value = price;
-            navTo('calc', document.querySelectorAll('.nav-link')[2]);
-            runCalc();
-        }
+        const productData = {
+    'PP-拉丝级 T30S': {
+        title: '聚丙烯 (PP)',
+        desc: '广泛应用于包装、纤维、汽车、家电等日用品以及工业品等领域的生产，近几年在医疗领域也有较普遍的应用。包括：纤维料、注塑料、薄膜料、管材料、透明料等。'
+    },
+    'PE-膜级 LDPE': {
+        title: '聚乙烯 (PE)',
+        desc: '<b>高密度聚乙烯：</b>应用于薄膜料、注塑料、管材料、中空料；<br><b>低密度聚乙烯：</b>应用于包装膜，注塑制品、涂覆、电线电缆等领域，涂覆多应用于一次性纸杯、方便面桶等；<br><b>线性低密度聚乙烯：</b>以生产农膜、包装膜等薄膜制品为主，另外也可应用在生产注塑、电缆等产品，以及大型水塔、儿童爬梯等滚塑产品。'
+    }
+};
+
+function openProduct(name, price) {
+    const info = productData[name];
+    if (info) {
+        document.getElementById('modalTitle').innerText = info.title;
+        document.getElementById('modalContent').innerHTML = info.desc;
+        document.getElementById('productModal').classList.add('active');
+    }
+}
+
+function closeModal() {
+    document.getElementById('productModal').classList.remove('active');
+}
 
         function toggleTheme() {
             const b = document.body;
@@ -279,5 +386,16 @@
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <div id="productModal" class="modal-overlay" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 id="modalTitle" style="margin:0; color:var(--primary);">产品详情</h3>
+            <span style="cursor:pointer; font-size:24px;" onclick="closeModal()">&times;</span>
+        </div>
+        <div id="modalContent" style="line-height:1.6; font-size:14px; color:var(--text-main);"></div>
+        <button class="btn btn-primary" style="width:100%; margin-top:20px; justify-content:center;" onclick="closeModal()">了解了</button>
+    </div>
+</div>
 </body>
 </html>
